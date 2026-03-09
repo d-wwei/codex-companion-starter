@@ -2,6 +2,9 @@
 
 [中文说明](./README.zh-CN.md)
 
+> **Looking for other CLI assistants?** 
+> Check out the sister extensions: [Claude Code Companion Starter](https://github.com/d-wwei/claude-code-companion-starter) & [Gemini Companion Starter](https://github.com/d-wwei/gemini-companion-starter)
+
 Turn Codex CLI into a more consistent, workspace-aware, long-term personal assistant.
 
 Prompt templates for people who want Codex CLI to do more than answer one-off questions. These prompts help Codex:
@@ -23,6 +26,16 @@ Raw prompts often overfit to an idealized agent model. In practice, Codex CLI be
 - lightweight enough to avoid blocking normal work
 
 These prompts are written around that reality.
+
+## Key Features
+
+This prompt transforms Codex CLI from a powerful but amnesic one-shot tool into a long-term collaborator that builds rapport with you.
+
+- **Long-term Memory Setup:** Automatically establishes persistent global rules (`~/.codex/`) and project-specific memory (`.assistant/`).
+- **Preference Accumulation:** Remembers how you like things done—your role, coding style, workflow, and recurring instructions.
+- **Global Memory Promotion:** As it discovers your habits and reusable knowledge during active projects, it can automatically promote them to your global profile.
+- **Project-Specific Customization:** Every project can have its own tailored rules and context that override the global defaults.
+- **Continuous Collaboration:** You never have to explain your background, structure, or current progress from scratch again when re-entering a workspace.
 
 ## Why OpenClaw-Inspired Memory For Codex CLI
 
