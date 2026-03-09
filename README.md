@@ -36,6 +36,9 @@ This prompt transforms Codex CLI from a powerful but amnesic one-shot tool into 
 - **Global Memory Promotion:** As it discovers your habits and reusable knowledge during active projects, it can automatically promote them to your global profile.
 - **Project-Specific Customization:** Every project can have its own tailored rules and context that override the global defaults.
 - **Continuous Collaboration:** You never have to explain your background, structure, or current progress from scratch again when re-entering a workspace.
+- **Layered Bootstrap Interview:** The unified prompt now uses a compact 3-step interview that captures naming, style, assistant role, ambiguity handling, work types, and memory boundaries without blocking real work.
+- **Global Quick Mode:** When run from `$HOME`, Codex updates only `~/.codex/AGENTS.md` and does not ask whether globally written information should be synced to global memory.
+- **Historical Project Scan:** First-time setup can now scan older `.assistant/` workspaces, extract project/session summaries, and register them into the global projects index.
 
 ## Why OpenClaw-Inspired Memory For Codex CLI
 
@@ -132,7 +135,7 @@ That is the real point of the project: not just making Codex act smarter, but ma
 ## What's Included
 
 - [SKILL.md](./SKILL.md)  
-  **The recommended unified version(v2).** Now heavily enhanced with a 4-part split global `AGENTS.md`, Lazy Loading, Global Projects Index, and an interactive Memory Promotion sync flow. It inspects the workspace first, then asks you whether to proceed safely or proactively. Combines the best of all three versions below seamlessly.
+  **The recommended unified version.** It now includes a structured global `AGENTS.md`, lazy loading, a global projects index, a richer bootstrap interview, global quick mode behavior, and a more complete historical scan workflow.
 
 
 ## Quick Start
@@ -143,23 +146,13 @@ That is the real point of the project: not just making Codex act smarter, but ma
 3. Send it to Codex CLI in the target workspace.
 4. Let Codex inspect the workspace, update config, and start lightweight bootstrap if appropriate.
 
-## Which Version Should I Use?
+## Recent Improvements
 
-| Situation | Recommended |
-| --- | --- |
-| Not sure what to choose / want the smartest default | **`unified`** (Recommended) |
-| First time trying this workflow | `safe` |
-| Default long-term usage | `lite` |
-| New project and you want stronger setup automation | `strong` |
-| Existing workspace with a lot of hand-written config | `safe` |
-
-## Recommended Adoption Path
-
-1. Start with the **`unified`** version to let Codex assess your environment and ask for your preference.
-2. If you prefer manual selection:
-   - Start with `safe` to observe how Codex behaves in your actual environment.
-   - Switch to `lite` once the structure and defaults feel right.
-   - Use `strong` when you explicitly want Codex to push setup forward with fewer confirmations.
+- stronger first-round interview for long-term user profiling
+- explicit global quick mode with no redundant global-sync question
+- fuller historical project and session scanning flow
+- better alignment between bootstrap questions, memory promotion, and delivery reporting
+- clearer guidance for incremental updates instead of overwriting existing config
 
 ## Design Principles
 
