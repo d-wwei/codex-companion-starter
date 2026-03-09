@@ -105,6 +105,9 @@ That is the real point of the project: not just making Codex act smarter, but ma
 
 ## What's Included
 
+- [codex-cli-personal-assistant-prompt-unified.md](./codex-cli-personal-assistant-prompt-unified.md)  
+  **The recommended unified version.** It inspects the workspace first, then asks you whether to proceed safely or proactively. Combines the best of all three versions below.
+
 - [codex-cli-personal-assistant-prompt-safe.md](./codex-cli-personal-assistant-prompt-safe.md)  
   Inspect first, change later. Best for first-time setup and existing environments.
 
@@ -128,6 +131,7 @@ That is the real point of the project: not just making Codex act smarter, but ma
 
 | Situation | Recommended |
 | --- | --- |
+| Not sure what to choose / want the smartest default | **`unified`** (Recommended) |
 | First time trying this workflow | `safe` |
 | Default long-term usage | `lite` |
 | New project and you want stronger setup automation | `strong` |
@@ -135,9 +139,11 @@ That is the real point of the project: not just making Codex act smarter, but ma
 
 ## Recommended Adoption Path
 
-1. Start with `safe` to observe how Codex behaves in your actual environment.
-2. Switch to `lite` once the structure and defaults feel right.
-3. Use `strong` when you explicitly want Codex to push setup forward with fewer confirmations.
+1. Start with the **`unified`** version to let Codex assess your environment and ask for your preference.
+2. If you prefer manual selection:
+   - Start with `safe` to observe how Codex behaves in your actual environment.
+   - Switch to `lite` once the structure and defaults feel right.
+   - Use `strong` when you explicitly want Codex to push setup forward with fewer confirmations.
 
 ## Design Principles
 
