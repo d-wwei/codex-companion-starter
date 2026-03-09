@@ -42,6 +42,9 @@ The goal is not to pretend Codex CLI has native persistent memory in the same se
 - Project decisions can survive across sessions.
 - Temporary notes and stable preferences can be separated cleanly.
 - Codex can re-enter a workspace with better continuity.
+- **NEW**: Global preferences, style, and memory are now tracked cross-project via `~/.codex/AGENTS.md`.
+- **NEW**: A Global Projects Index tracks your active workspaces and session history.
+- **NEW**: The unified prompt includes a "Memory Promotion Flow" to seamlessly elevate recurring project habits into global defaults.
 
 ### Why It Feels More Human
 
@@ -64,9 +67,13 @@ That makes Codex more likely to:
 
 ### Why It Can Grow With The User
 
-`AGENTS.md` is best for stable rules.
+`AGENTS.md` is best for stable rules, but real collaboration also includes evolving preferences, recurring habits, project-specific decisions, and temporary context. 
 
-But real collaboration also includes evolving preferences, recurring habits, project-specific decisions, and temporary context. Those fit better in a memory structure than in a single instruction file.
+The enhanced **Unified Prompt** splits `AGENTS.md` into four distinct global zones:
+1. `<GLOBAL_USER_PROFILE>`: Your identity across all projects.
+2. `<GLOBAL_STYLE>`: Your default communication preferences.
+3. `<GLOBAL_MEMORY>`: Cross-project reusable technical knowledge.
+4. `<GLOBAL_PROJECTS_INDEX>`: A registry of all active projects and recent sessions.
 
 A good external memory layer lets Codex grow with the user by gradually capturing:
 
@@ -75,21 +82,27 @@ A good external memory layer lets Codex grow with the user by gradually capturin
 - project constraints and decisions
 - unfinished work from recent sessions
 
-This is a better match for long-term use than trying to stuff everything into one global rules file.
+This is a better match for long-term use than trying to stuff everything into one unstructured rules file.
 
 ### Concrete Examples
 
-1. Style becomes stable across sessions.  
+1. **Style becomes stable across sessions.**  
    Instead of repeating "be concise, give the conclusion first, then risks", those preferences can live in `STYLE.md`.
 
-2. Project decisions stop resetting.  
+2. **Project decisions stop resetting.**  
    If a project already decided not to split a service yet, that can live in `memory/projects/architecture.md` instead of being re-debated from scratch.
 
-3. Workflow becomes personalized.  
+3. **Workflow becomes personalized.**  
    If you prefer "inspect first, explain the edit briefly, then change files, then report verification", that can live in `WORKFLOW.md`.
 
-4. Temporary context stops polluting long-term rules.  
+4. **Temporary context stops polluting long-term rules.**  
    Short-lived notes such as "this API doc is still unverified" belong in `memory/daily/YYYY-MM-DD.md`, not in permanent memory.
+
+5. **Cross-Project Synergy (New).**  
+   If Codex notices you always prefer ESLint over Prettier in 3 different projects, it will proactively ask: *"Should I promote this preference to your global AGENTS.md?"*
+
+6. **Lazy Loading (New).**  
+   Codex now intentionally *lazy-loads* memory. It reads `SYSTEM.md` and your `inbox.md` first, only fetching deeper archival memory when the context actually demands it, saving tokens and improving speed.
 
 ### The Practical Meaning
 
@@ -106,21 +119,22 @@ That is the real point of the project: not just making Codex act smarter, but ma
 ## What's Included
 
 - [codex-cli-personal-assistant-prompt-unified.md](./codex-cli-personal-assistant-prompt-unified.md)  
-  **The recommended unified version.** It inspects the workspace first, then asks you whether to proceed safely or proactively. Combines the best of all three versions below.
+  **The recommended unified version(v2).** Now heavily enhanced with a 4-part split global `AGENTS.md`, Lazy Loading, Global Projects Index, and an interactive Memory Promotion sync flow. It inspects the workspace first, then asks you whether to proceed safely or proactively. Combines the best of all three versions below seamlessly.
 
 - [codex-cli-personal-assistant-prompt-safe.md](./codex-cli-personal-assistant-prompt-safe.md)  
-  Inspect first, change later. Best for first-time setup and existing environments.
+  Inspect first, change later. Best for first-time setup and existing environments (v1 baseline).
 
 - [codex-cli-personal-assistant-prompt-lite.md](./codex-cli-personal-assistant-prompt-lite.md)  
-  Balanced default for most day-to-day use.
+  Balanced default for most day-to-day use (v1 baseline).
 
 - [codex-cli-personal-assistant-prompt-strong.md](./codex-cli-personal-assistant-prompt-strong.md)  
-  More proactive setup for greenfield projects or when you want Codex to move faster.
+  More proactive setup for greenfield projects or when you want Codex to move faster (v1 baseline).
 
 - [codex-cli-personal-assistant-prompt-comparison.md](./codex-cli-personal-assistant-prompt-comparison.md)  
   A side-by-side comparison table.
 
 ## Quick Start
+
 
 1. Open the prompt file you want to use.
 2. Copy the full `text` code block.
