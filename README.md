@@ -5,7 +5,7 @@
 > **Looking for other CLI assistants?** 
 > Check out the sister extensions: [Claude Code Companion Starter](https://github.com/d-wwei/claude-code-companion-starter) & [Gemini Companion Starter](https://github.com/d-wwei/gemini-companion-starter)
 
-Turn Codex CLI into a more consistent, workspace-aware, long-term personal assistant.
+Turn Codex CLI into a directly installable, workspace-aware, long-term personal assistant skill.
 
 Prompt templates for people who want Codex CLI to do more than answer one-off questions. These prompts help Codex:
 
@@ -135,15 +135,33 @@ That is the real point of the project: not just making Codex act smarter, but ma
 ## What's Included
 
 - [SKILL.md](./SKILL.md)  
-  **The recommended unified version.** It now includes a structured global `AGENTS.md`, lazy loading, a global projects index, a richer bootstrap interview, global quick mode behavior, and a more complete historical scan workflow.
+  The installable root skill for Codex.
 
+- [agents/openai.yaml](./agents/openai.yaml)  
+  UI metadata for Codex skill installation and invocation.
+
+
+## Install
+
+You can install this repository directly as a Codex skill from GitHub.
+
+Example:
+
+```bash
+python ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo d-wwei/codex-companion-starter \
+  --path .
+```
+
+After installation, restart Codex.
 
 ## Quick Start
 
 
-1. Open the prompt file you want to use.
-2. Copy the full `text` code block.
-3. Send it to Codex CLI in the target workspace.
+1. Install the skill.
+2. Restart Codex.
+3. In a target workspace, invoke it explicitly, for example:
+   - `Use $codex-companion-starter to initialize this workspace for long-term collaboration.`
 4. Let Codex inspect the workspace, update config, and start lightweight bootstrap if appropriate.
 
 ## Recent Improvements
@@ -153,6 +171,16 @@ That is the real point of the project: not just making Codex act smarter, but ma
 - fuller historical project and session scanning flow
 - better alignment between bootstrap questions, memory promotion, and delivery reporting
 - clearer guidance for incremental updates instead of overwriting existing config
+
+## Installable Skill Layout
+
+```text
+SKILL.md
+agents/
+  openai.yaml
+```
+
+This repository now follows the standard Codex skill shape, so the repo itself can be installed instead of requiring a nested `skill/` path.
 
 ## Design Principles
 

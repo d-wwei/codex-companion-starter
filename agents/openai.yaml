@@ -1,0 +1,7 @@
+interface:
+  display_name: "Codex Companion Starter"
+  short_description: "Bootstrap Codex into a long-term assistant"
+  default_prompt: "Use $codex-companion-starter to initialize Codex CLI with global memory, project memory, and lightweight bootstrap."
+
+policy:
+  allow_implicit_invocation: true
