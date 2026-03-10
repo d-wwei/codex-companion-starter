@@ -19,10 +19,13 @@ Keep execution direct, incremental, and safe.
 2. Prefer incremental edits over destructive rewrites.
 3. Treat deleted `.assistant/` state as de-initialized and clean stale project entries from `<GLOBAL_PROJECTS_INDEX>`.
 4. Use lazy loading during normal work: default to `~/.codex/AGENTS.md`, `.assistant/SYSTEM.md`, and `.assistant/runtime/inbox.md`; load deeper memory only when needed.
-5. Only write session summaries and daily memory at meaningful boundaries such as task completion, `/done`, `结束`, `总结会话`, `归档`, or explicit decision capture.
-6. Never store secrets, tokens, banking information, medical data, or raw chat transcripts.
-7. If the user gives a real business task alongside initialization, prioritize the business task and keep bootstrap lightweight.
-8. If currently writing directly into `~/.codex/AGENTS.md` global sections, or working in global quick mode, do not ask whether to sync that same information to global memory.
+5. For multi-step implementation work, maintain a short `PROGRESS.md` in the active module or task directory so task-level progress survives process interruption.
+6. When resuming interrupted work, locate the relevant `PROGRESS.md` in this order: current working directory, most recently modified module, user-named module, then best keyword-matching module; read only the most relevant one or two before broader memory scans.
+7. Summarize completed items plus next step from the selected `PROGRESS.md`, and ask whether to continue from there.
+8. Only write session summaries and daily memory at meaningful boundaries such as task completion, `/done`, `结束`, `总结会话`, `归档`, or explicit decision capture.
+9. Never store secrets, tokens, banking information, medical data, or raw chat transcripts.
+10. If the user gives a real business task alongside initialization, prioritize the business task and keep bootstrap lightweight.
+11. If currently writing directly into `~/.codex/AGENTS.md` global sections, or working in global quick mode, do not ask whether to sync that same information to global memory.
 
 ## Workspace decision
 
@@ -146,6 +149,8 @@ If the workspace is suitable, create or repair:
     last-session.md
 ```
 
+Additionally, for any non-trivial implementation task, create or update a module-local `PROGRESS.md` near the code being changed. Do not centralize all task progress into `.assistant/`.
+
 Rules:
 
 - `SYSTEM.md`
@@ -180,6 +185,58 @@ Rules:
   - after 7 days, promote lasting value
   - after 14 days, suggest cleanup
 
+- `PROGRESS.md` in the active module/task directory
+  - use it for task-level checkpointing, not session summaries
+  - use this fixed structure:
+
+    ```md
+    status: in_progress
+    task: Add task-level progress recovery
+    module_path: packages/assistant-memory/
+
+    # 开发进度
+
+    ## 已完成
+    - [x] 明确 `PROGRESS.md` 使用模块局部文件而不是 `.assistant/`
+    - [x] 加入恢复口令：继续上次进度 / 恢复进度
+    - [x] 定义恢复时的候选定位顺序
+
+    ## 进行中
+    - [ ] 把恢复逻辑接入当前模块的初始化流程
+
+    ## 待做
+    - [ ] 补充恢复话术模板
+    - [ ] 增加多候选 `PROGRESS.md` 的确认逻辑
+    - [ ] 完成一次中断恢复流程验证
+
+    ## 关键决策
+    - `PROGRESS.md` 放在实际模块目录，避免所有任务共用一份中心状态文件
+    - 恢复时只读取最相关的 1-2 个候选，减少 token 消耗
+
+    ## 已知问题
+    - 当前模块还没有验证“多个候选进度文件”时的选择行为
+    ```
+  - optionally add a very small header for `status`, task name, or module path
+  - update it every time an acceptance item is completed, and also when a blocker is found, the active step changes, or before handoff/interruption
+  - if found on a later run and `status` is not `completed`, summarize it first and ask whether to continue from that checkpoint
+  - mark `status: completed` when the task is done so future runs do not re-open finished work
+  - support explicit resume triggers such as “继续上次进度”, “恢复进度”, `resume progress`, or `continue from progress`
+  - locate it in this order: current working directory, most recently modified module, user-named module, then best keyword-matching module
+  - if multiple candidates remain, read only the top 1-2 and ask the user which module to continue
+  - use this standard resume wording:
+
+    ```text
+    我找到了这份进度记录：
+    - 已完成：...
+    - 进行中：...
+    - 下一步：...
+
+    要我按这份进度继续吗？
+    ```
+
+  - if there is a blocker, switch `进行中` to `当前卡点`
+  - if there are multiple candidates, summarize each in one line and ask which one to continue
+
 - if in Git and `.assistant/` is not ignored, append it to `.gitignore`
 
 - after initialization, register the project in `<GLOBAL_PROJECTS_INDEX>` with:
@@ -198,6 +255,7 @@ After file creation or repair:
 3. inspect `BOOTSTRAP.md`
 4. inspect whether global profile content already exists
 5. ensure the project is present in the global index
+6. if the user is resuming an implementation task, inspect the nearest relevant `PROGRESS.md`
 
 If bootstrap is already completed, do not restart it.
 
@@ -254,8 +312,11 @@ At the end, give a concise but complete report including:
 2. existing files updated
 3. whether the current project was added to `<GLOBAL_PROJECTS_INDEX>`
 4. what information is still missing from the user
-5. which quick commands now work, such as:
+5. whether any `PROGRESS.md` was created or updated for resumable task handoff
+6. which quick commands now work, such as:
    - “查看我的配置”
    - “审查记忆”
    - “列出我的项目”
+   - “继续上次进度”
+   - “恢复进度”
    - “归档项目”

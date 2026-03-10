@@ -39,6 +39,7 @@ This prompt transforms Codex CLI from a powerful but amnesic one-shot tool into 
 - **Layered Bootstrap Interview:** The unified prompt now uses a compact 3-step interview that captures naming, style, assistant role, ambiguity handling, work types, and memory boundaries without blocking real work.
 - **Global Quick Mode:** When run from `$HOME`, Codex updates only `~/.codex/AGENTS.md` and does not ask whether globally written information should be synced to global memory.
 - **Historical Project Scan:** First-time setup can now scan older `.assistant/` workspaces, extract project/session summaries, and register them into the global projects index.
+- **Task-Level Resume Checkpoints:** For non-trivial implementation work, Codex can maintain a module-local `PROGRESS.md` so a new process can quickly resume from the exact acceptance step instead of inferring progress from scratch.
 
 ## Why OpenClaw-Inspired Memory For Codex CLI
 
@@ -74,6 +75,8 @@ With only raw prompts, you often have to restate:
 - where the last session stopped
 
 With a memory layout such as `.assistant/STYLE.md`, `.assistant/WORKFLOW.md`, `.assistant/MEMORY.md`, and `memory/projects/*.md`, those details become editable project assets instead of fragile conversational leftovers.
+
+For active implementation work, a nearby `PROGRESS.md` adds one more layer: a very small task-local checkpoint file that says what was already finished, what is currently in progress, and what should happen next.
 
 That makes Codex more likely to:
 
@@ -119,6 +122,54 @@ This is a better match for long-term use than trying to stuff everything into on
 
 6. **Lazy Loading (New).**  
    Codex now intentionally *lazy-loads* memory. It reads `SYSTEM.md` and your `inbox.md` first, only fetching deeper archival memory when the context actually demands it, saving tokens and improving speed.
+
+7. **Task Resumption (New).**  
+   If work stops halfway through a feature, a module-local `PROGRESS.md` can tell the next Codex process which acceptance items are done and what the next concrete step is.
+
+The recommended `PROGRESS.md` shape is:
+
+```md
+status: in_progress
+task: Add task-level progress recovery
+module_path: packages/assistant-memory/
+
+# 开发进度
+
+## 已完成
+- [x] 明确 `PROGRESS.md` 使用模块局部文件而不是 `.assistant/`
+- [x] 加入恢复口令：继续上次进度 / 恢复进度
+- [x] 定义恢复时的候选定位顺序
+
+## 进行中
+- [ ] 把恢复逻辑接入当前模块的初始化流程
+
+## 待做
+- [ ] 补充恢复话术模板
+- [ ] 增加多候选 `PROGRESS.md` 的确认逻辑
+- [ ] 完成一次中断恢复流程验证
+
+## 关键决策
+- `PROGRESS.md` 放在实际模块目录，避免所有任务共用一份中心状态文件
+- 恢复时只读取最相关的 1-2 个候选，减少 token 消耗
+
+## 已知问题
+- 当前模块还没有验证“多个候选进度文件”时的选择行为
+```
+
+Update it every time an acceptance item is completed. For explicit recovery, the user can say `继续上次进度`, `恢复进度`, `resume progress`, or `continue from progress`.
+
+When recovering, the assistant should locate the most relevant `PROGRESS.md` in this order: current working directory, most recently modified module, user-named module, then best keyword-matching module. It should read only the top 1-2 candidates instead of scanning every progress file in the repo.
+
+The recommended resume wording is:
+
+```text
+我找到了这份进度记录：
+- 已完成：...
+- 进行中：...
+- 下一步：...
+
+要我按这份进度继续吗？
+```
 
 ### The Practical Meaning
 
@@ -171,6 +222,7 @@ After installation, restart Codex.
 - fuller historical project and session scanning flow
 - better alignment between bootstrap questions, memory promotion, and delivery reporting
 - clearer guidance for incremental updates instead of overwriting existing config
+- task-level `PROGRESS.md` checkpoints for interrupted implementation work
 
 ## Installable Skill Layout
 
