@@ -39,7 +39,7 @@ This prompt transforms Codex CLI from a powerful but amnesic one-shot tool into 
 - **Layered Bootstrap Interview:** The unified prompt now uses a compact 3-step interview that captures naming, style, assistant role, ambiguity handling, work types, and memory boundaries without blocking real work.
 - **Global Quick Mode:** When run from `$HOME`, Codex updates only `~/.codex/AGENTS.md` and does not ask whether globally written information should be synced to global memory.
 - **Historical Project Scan:** First-time setup can now scan older `.assistant/` workspaces, extract project/session summaries, and register them into the global projects index.
-- **Task-Level Resume Checkpoints:** For non-trivial implementation work, Codex can maintain a module-local `PROGRESS.md` so a new process can quickly resume from the exact acceptance step instead of inferring progress from scratch.
+- **Task-Level Resume Checkpoints:** For non-trivial ongoing work, Codex can maintain a module-local `PROGRESS.md` so a new process can quickly resume from the exact milestone or acceptance step instead of inferring progress from scratch.
 
 ## Why OpenClaw-Inspired Memory For Codex CLI
 
@@ -76,7 +76,7 @@ With only raw prompts, you often have to restate:
 
 With a memory layout such as `.assistant/STYLE.md`, `.assistant/WORKFLOW.md`, `.assistant/MEMORY.md`, and `memory/projects/*.md`, those details become editable project assets instead of fragile conversational leftovers.
 
-For active implementation work, a nearby `PROGRESS.md` adds one more layer: a very small task-local checkpoint file that says what was already finished, what is currently in progress, and what should happen next.
+For active project work, a nearby `PROGRESS.md` adds one more layer: a very small task-local checkpoint file that says what was already finished, what is currently in progress, and what should happen next.
 
 That makes Codex more likely to:
 
@@ -124,9 +124,44 @@ This is a better match for long-term use than trying to stuff everything into on
    Codex now intentionally *lazy-loads* memory. It reads `SYSTEM.md` and your `inbox.md` first, only fetching deeper archival memory when the context actually demands it, saving tokens and improving speed.
 
 7. **Task Resumption (New).**  
-   If work stops halfway through a feature, a module-local `PROGRESS.md` can tell the next Codex process which acceptance items are done and what the next concrete step is.
+   If work stops halfway through a feature, article, edit pass, or production task, a module-local `PROGRESS.md` can tell the next Codex process what is done and what the next concrete step is.
 
-The recommended `PROGRESS.md` shape is:
+Use the generic template by default for content, video, research, operations, design, or mixed project work:
+
+```md
+status: in_progress
+task: Produce launch video cut
+module_path: content/video-launch/
+project_type: video-editing
+
+# 任务进度
+
+## 已完成
+- [x] 确认视频目标、时长和发布渠道
+- [x] 整理可用素材与配音版本
+
+## 进行中
+- [ ] 精剪主版本时间线并对齐字幕
+
+## 待做
+- [ ] 输出 16:9 主版本
+- [ ] 裁切 9:16 短视频版本
+- [ ] 完成最终审校并导出交付文件
+
+## 关键决策
+- 主版本控制在 90 秒内，优先保留产品演示镜头
+- 字幕风格统一使用品牌模板，避免重新设计一套样式
+
+## 已知问题
+- 第三段配音底噪偏重，可能需要降噪或重录
+
+## 关键文件 / 素材
+- raw/interview-a-roll/
+- edits/launch-main.prproj
+- assets/subtitles/final-cn.srt
+```
+
+Keep the development-specific template for software implementation work:
 
 ```md
 status: in_progress
@@ -156,7 +191,7 @@ module_path: packages/assistant-memory/
 - 当前模块还没有验证“多个候选进度文件”时的选择行为
 ```
 
-Update it every time an acceptance item is completed. For explicit recovery, the user can say `继续上次进度`, `恢复进度`, `resume progress`, or `continue from progress`.
+Use the generic template for milestone-based work. Use the development template when the task is driven by explicit acceptance items and code verification. For explicit recovery, the user can say `继续上次进度`, `恢复进度`, `resume progress`, or `continue from progress`.
 
 When recovering, the assistant should locate the most relevant `PROGRESS.md` in this order: current working directory, most recently modified module, user-named module, then best keyword-matching module. It should read only the top 1-2 candidates instead of scanning every progress file in the repo.
 

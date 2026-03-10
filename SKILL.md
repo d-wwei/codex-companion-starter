@@ -19,7 +19,7 @@ Keep execution direct, incremental, and safe.
 2. Prefer incremental edits over destructive rewrites.
 3. Treat deleted `.assistant/` state as de-initialized and clean stale project entries from `<GLOBAL_PROJECTS_INDEX>`.
 4. Use lazy loading during normal work: default to `~/.codex/AGENTS.md`, `.assistant/SYSTEM.md`, and `.assistant/runtime/inbox.md`; load deeper memory only when needed.
-5. For multi-step implementation work, maintain a short `PROGRESS.md` in the active module or task directory so task-level progress survives process interruption.
+5. For multi-step work of any kind, maintain a short `PROGRESS.md` in the active module or task directory so task-level progress survives process interruption.
 6. When resuming interrupted work, locate the relevant `PROGRESS.md` in this order: current working directory, most recently modified module, user-named module, then best keyword-matching module; read only the most relevant one or two before broader memory scans.
 7. Summarize completed items plus next step from the selected `PROGRESS.md`, and ask whether to continue from there.
 8. Only write session summaries and daily memory at meaningful boundaries such as task completion, `/done`, `结束`, `总结会话`, `归档`, or explicit decision capture.
@@ -149,7 +149,7 @@ If the workspace is suitable, create or repair:
     last-session.md
 ```
 
-Additionally, for any non-trivial implementation task, create or update a module-local `PROGRESS.md` near the code being changed. Do not centralize all task progress into `.assistant/`.
+Additionally, for any non-trivial ongoing task, create or update a module-local `PROGRESS.md` near the active working directory. Do not centralize all task progress into `.assistant/`.
 
 Rules:
 
@@ -187,7 +187,45 @@ Rules:
 
 - `PROGRESS.md` in the active module/task directory
   - use it for task-level checkpointing, not session summaries
-  - use this fixed structure:
+  - first choose the template by task type:
+    - generic template: content production, video editing, research, operations, design, mixed project work
+    - development template: software implementation tasks with explicit acceptance items, file changes, or verification steps
+  - generic template:
+
+    ```md
+    status: in_progress
+    task: Produce launch video cut
+    module_path: content/video-launch/
+    project_type: video-editing
+
+    # 任务进度
+
+    ## 已完成
+    - [x] 确认视频目标、时长和发布渠道
+    - [x] 整理可用素材与配音版本
+
+    ## 进行中
+    - [ ] 精剪主版本时间线并对齐字幕
+
+    ## 待做
+    - [ ] 输出 16:9 主版本
+    - [ ] 裁切 9:16 短视频版本
+    - [ ] 完成最终审校并导出交付文件
+
+    ## 关键决策
+    - 主版本控制在 90 秒内，优先保留产品演示镜头
+    - 字幕风格统一使用品牌模板，避免重新设计一套样式
+
+    ## 已知问题
+    - 第三段配音底噪偏重，可能需要降噪或重录
+
+    ## 关键文件 / 素材
+    - raw/interview-a-roll/
+    - edits/launch-main.prproj
+    - assets/subtitles/final-cn.srt
+    ```
+
+  - development template:
 
     ```md
     status: in_progress
@@ -216,8 +254,9 @@ Rules:
     ## 已知问题
     - 当前模块还没有验证“多个候选进度文件”时的选择行为
     ```
-  - optionally add a very small header for `status`, task name, or module path
-  - update it every time an acceptance item is completed, and also when a blocker is found, the active step changes, or before handoff/interruption
+  - optionally add a very small header for `status`, task name, module path, or project type
+  - generic template: update when a milestone is completed, the active stage changes, a blocker appears, or before handoff/interruption
+  - development template: update every time an acceptance item is completed, and also when a blocker is found, the active step changes, or before handoff/interruption
   - if found on a later run and `status` is not `completed`, summarize it first and ask whether to continue from that checkpoint
   - mark `status: completed` when the task is done so future runs do not re-open finished work
   - support explicit resume triggers such as “继续上次进度”, “恢复进度”, `resume progress`, or `continue from progress`
@@ -255,7 +294,7 @@ After file creation or repair:
 3. inspect `BOOTSTRAP.md`
 4. inspect whether global profile content already exists
 5. ensure the project is present in the global index
-6. if the user is resuming an implementation task, inspect the nearest relevant `PROGRESS.md`
+6. if the user is resuming a task, inspect the nearest relevant `PROGRESS.md`
 
 If bootstrap is already completed, do not restart it.
 
