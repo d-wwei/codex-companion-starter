@@ -8,9 +8,9 @@
 > **Looking for other CLI assistants?** 
 > Check out the sister extensions: [Claude Recall](https://github.com/d-wwei/claude-recall) & [Gemini Recall](https://github.com/d-wwei/gemini-recall)
 
-Turn Codex CLI into a directly installable, workspace-aware, long-term personal assistant skill.
+Turn Codex CLI into an installable long-term collaboration skill with durable memory and session continuity.
 
-Prompt templates for people who want Codex CLI to do more than answer one-off questions. These prompts help Codex:
+This installable skill is for people who want Codex CLI to do more than answer one-off questions. It emphasizes long-term memory, growing collaboration chemistry over time, session handoff continuity, and fast recall of prior context. These prompts help Codex:
 
 - keep a stable collaboration style
 - initialize local project memory structure
@@ -36,9 +36,10 @@ This prompt transforms Codex CLI from a powerful but amnesic one-shot tool into 
 
 - **Long-term Memory Setup:** Automatically establishes persistent global rules (`~/.codex/`) and project-specific memory (`.assistant/`).
 - **Preference Accumulation:** Remembers how you like things done—your role, coding style, workflow, and recurring instructions.
+- **Session Handoff Continuity:** Keeps work resumable across interruptions, so the next session can continue from the right breakpoint instead of restarting from scratch.
 - **Global Memory Promotion:** As it discovers your habits and reusable knowledge during active projects, it can automatically promote them to your global profile.
 - **Project-Specific Customization:** Every project can have its own tailored rules and context that override the global defaults.
-- **Continuous Collaboration:** You never have to explain your background, structure, or current progress from scratch again when re-entering a workspace.
+- **Fast Recall:** Helps Codex quickly recall your background, working style, recent decisions, and unfinished context when you re-enter a workspace.
 - **Layered Bootstrap Interview:** The unified prompt now uses a compact 3-step interview that captures naming, style, assistant role, ambiguity handling, work types, and memory boundaries without blocking real work.
 - **Global Quick Mode:** When run from `$HOME`, Codex updates only `~/.codex/AGENTS.md` and does not ask whether globally written information should be synced to global memory.
 - **Historical Project Scan:** First-time setup can now scan older `.assistant/` workspaces, extract project/session summaries, and register them into the global projects index.
